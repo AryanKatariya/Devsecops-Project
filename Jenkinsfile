@@ -5,12 +5,6 @@ pipeline {
         maven 'Maven_3.9.8'
     }
 
-    stage ('Check secrets') {
-      steps {
-      sh 'trufflehog3 https://github.com/roshangami/webgoat_devsecops.git -f json -o truffelhog_output.json || true'
-      }
-    }
-
     stages {
         stage('Cleanup workspace') {
             steps {
@@ -20,17 +14,17 @@ pipeline {
 
         stage('Checkout from SCM') {
             steps {
-                git branch: 'main', credentialsId: 'github_token', url: 'https://github.com/AryanKatariya/Webgoat-Devsecops.git'
+                git branch: 'main', credentialsId: 'github_token', url: 'https://github.com/AryanKatariya/Devsecops-Project.git'
             }
         }
         
-        stage ('Check secrets') {
+        stage('Check secrets') {
             steps {
-            sh 'trufflehog https://github.com/AryanKatariya/Webgoat-Devsecops.git --json > trufflehog_output.json'
+                sh 'trufflehog https://github.com/AryanKatariya/Devsecops-Project.git --json > trufflehog_output.json'
             }
         }
 
-        stage ('SCA - OWASPDC') {
+        stage('SCA - OWASPDC') {
             steps {
                 dependencyCheck additionalArguments: ''' 
                     -o "./" 
@@ -42,12 +36,12 @@ pipeline {
             }
         }
 
-
         stage('Build application') {
             steps {
                 sh "mvn clean install -DskipTests"
             }
         }
+
         stage('Deploy to server') {
             steps {
                 script {
@@ -68,9 +62,8 @@ pipeline {
                             docker restart devops-container
                             '
                         """
-                    }
                 }
+            }
         }
     }    
 }
-
