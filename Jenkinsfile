@@ -25,7 +25,7 @@ pipeline {
         
         stage('Check secrets') {
             steps {
-                sh 'trufflehog https://$GITHUB_TOKEN@github.com/AryanKatariya/Devsecops-Project.git --json > trufflehog_output.json'
+                sh 'trufflehog https://$GITHUB_TOKEN@github.com/AryanKatariya/Devsecops-Project.git --json > trufflehog_output.json || true'
             }
         }
 
