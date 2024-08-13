@@ -44,7 +44,7 @@ pipeline {
         stage ('SAST - SonarQube') {
             steps {
                 withSonarQubeEnv('sonar') {
-                sh 'mvn clean sonar:sonar -Dsonar.java.binaries=src'
+                sh 'mvn clean sonar:sonar -Dsonar.java.binaries=src -Dsonar.projectKey=WebGoat'
                 }
             }
         }
