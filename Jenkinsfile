@@ -66,14 +66,7 @@ pipeline {
                     sh "sshpass -p ${password} scp -o StrictHostKeyChecking=no ${warFile} ${username}@172.31.44.98:/home/dockeradmin"
 
                     sh """
-                            sshpass -p 'docker' ssh -o StrictHostKeyChecking=no dockeradmin@172.31.44.98 '
-                            docker stop devops-container
-                            docker rm devops-container
-                            docker pull tomcat:8.0 &&
-                            docker run --name devops-container -d -p 8080:8080 tomcat:8.0 &&
-                            docker cp ./*.war devops-container:/usr/local/tomcat/webapps/webapp.war &&
-                            docker restart devops-container
-                            '
+                            sshpass -p 'docker' ssh -o StrictHostKeyChecking=no dockeradmin@172.31.44.98 'nohup java -jar /WebGoat/webgoat-server-v8.2.0-SNAPSHOT.jar &'
                         """
                 }
             }
