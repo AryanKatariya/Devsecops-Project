@@ -5,16 +5,28 @@ pipeline {
         maven 'Maven_3.9.8'
     }
 
+    stage ('Check secrets') {
+      steps {
+      sh 'trufflehog3 https://github.com/roshangami/webgoat_devsecops.git -f json -o truffelhog_output.json || true'
+      }
+    }
+
     stages {
         stage('Cleanup workspace') {
             steps {
                 cleanWs()
             }
         }
-        
+
         stage('Checkout from SCM') {
             steps {
                 git branch: 'main', credentialsId: 'github_token', url: 'https://github.com/AryanKatariya/Webgoat-Devsecops.git'
+            }
+        }
+        
+        stage ('Check secrets') {
+            steps {
+            sh 'trufflehog https://github.com/AryanKatariya/Webgoat-Devsecops.git --json > trufflehog_output.json'
             }
         }
 
