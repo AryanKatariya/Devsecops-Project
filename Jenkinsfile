@@ -41,6 +41,14 @@ pipeline {
             }
         }
 
+        stage ('SAST - SonarQube') {
+            steps {
+                withSonarQubeEnv('sonar') {
+                sh 'mvn clean sonar:sonar -Dsonar.java.binaries=src'
+                }
+            }
+        }
+
         stage('Build application') {
             steps {
                 sh "mvn clean install -DskipTests"
