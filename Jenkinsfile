@@ -1,8 +1,13 @@
 pipeline {
     agent any
+
     tools {
         jdk 'JAVA_11'
         maven 'Maven_3.9.8'
+    }
+
+    environment {
+        GITHUB_TOKEN = credentials('github_token')
     }
 
     stages {
@@ -20,7 +25,7 @@ pipeline {
         
         stage('Check secrets') {
             steps {
-                sh 'trufflehog https://github.com/AryanKatariya/Devsecops-Project.git --json > trufflehog_output.json'
+                sh 'trufflehog https://$GITHUB_TOKEN@github.com/AryanKatariya/Devsecops-Project.git --json > trufflehog_output.json'
             }
         }
 
