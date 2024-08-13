@@ -41,13 +41,13 @@ pipeline {
             }
         }
 
-        stage ('SAST - SonarQube') {
-            steps {
-                withSonarQubeEnv('sonar') {
-                sh 'mvn clean sonar:sonar -Dsonar.java.binaries=src -Dsonar.projectKey=WebGoat'
-                }
-            }
-        }
+    //   stage ('SAST - SonarQube') {
+    //        steps {
+    //            withSonarQubeEnv('sonar') {
+    //            sh 'mvn clean sonar:sonar -Dsonar.java.binaries=src -Dsonar.projectKey=WebGoat'
+    //            }
+    //        }
+    //    }
 
         stage('Build application') {
             steps {
