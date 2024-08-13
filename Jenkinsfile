@@ -41,13 +41,13 @@ pipeline {
             }
         }
 
-    //   stage ('SAST - SonarQube') {
-    //        steps {
-    //            withSonarQubeEnv('sonar') {
-    //            sh 'mvn clean sonar:sonar -Dsonar.java.binaries=src -Dsonar.projectKey=WebGoat'
-    //            }
-    //        }
-    //    }
+       stage ('SAST - SonarQube') {
+            steps {
+                withSonarQubeEnv('sonar') {
+                sh 'mvn clean sonar:sonar -Dsonar.java.binaries=src -Dsonar.projectKey=WebGoat'
+                }
+            }
+        }
 
         stage('Build application') {
             steps {
@@ -65,9 +65,9 @@ pipeline {
                     def warFile = '/var/lib/jenkins/workspace/GoatPipeline@2/webgoat-server/target/webgoat-server-v8.2.0-SNAPSHOT.jar'
                     sh "sshpass -p ${password} scp -o StrictHostKeyChecking=no ${warFile} ${username}@172.31.44.98:/home/dockeradmin"
 
-                    sh """
-                            sshpass -p 'docker' ssh -o StrictHostKeyChecking=no dockeradmin@172.31.44.98 'nohup java -jar /WebGoat/webgoat-server-v8.2.0-SNAPSHOT.jar &'
-                        """
+    //                sh """
+    //                        sshpass -p 'docker' ssh -o StrictHostKeyChecking=no dockeradmin@172.31.44.98 'nohup java -jar /WebGoat/webgoat-server-v8.2.0-SNAPSHOT.jar &'
+    //                    """
                 }
             }
         }
