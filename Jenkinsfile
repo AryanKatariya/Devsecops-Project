@@ -73,6 +73,26 @@ pipeline {
             }
         }
 
+        stage('Deploy to server') {
+            steps {
+                script {
+                    def warFile = '/var/lib/jenkins/workspace/GoatPipeline@2/webgoat-server/target/webgoat-server-v8.2.0-SNAPSHOT.jar'
+                    
+                    sshagent(['deploy-ssh']) {
+                        sh """
+                            scp -o StrictHostKeyChecking=no ${warFile} ubuntu@172.31.8.167:/WebGoat
+                        """
+                        
+                        sh """
+                            ssh -o StrictHostKeyChecking=no ubuntu@172.31.8.167 \
+                            "nohup java -jar /WebGoat/webgoat-server-v8.2.0-SNAPSHOT.jar &"
+                        """
+                    }
+                }
+            }
+        }
+
+
         stage ('DAST - OWASP ZAP') {
             steps {
                 sshagent(['zap-ssh']) {
@@ -85,4 +105,5 @@ pipeline {
 
     }    
 }
+
 // "sudo /usr/sbin/fuser -k 8080/tcp || true && nohup java -jar webgoat-server-v8.2.0-SNAPSHOT.jar --server.address=0.0.0.0 > /dev/null 2>&1 &"
