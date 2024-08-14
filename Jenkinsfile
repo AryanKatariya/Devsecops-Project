@@ -75,20 +75,18 @@ pipeline {
 
         stage('Deploy to server') {
             steps {
-                timeout(time: 3, unit: 'MINUTES'){
-                    script {
-                        def warFile = '/var/lib/jenkins/workspace/GoatPipeline@2/webgoat-server/target/webgoat-server-v8.2.0-SNAPSHOT.jar'
+                script {
+                    def warFile = '/var/lib/jenkins/workspace/GoatPipeline@2/webgoat-server/target/webgoat-server-v8.2.0-SNAPSHOT.jar'
+                    
+                    sshagent(['deploy-ssh']) {
+                        sh """
+                            scp -o StrictHostKeyChecking=no ${warFile} ubuntu@172.31.8.167:/WebGoat
+                        """
                         
-                        sshagent(['deploy-ssh']) {
-                            sh """
-                                scp -o StrictHostKeyChecking=no ${warFile} ubuntu@172.31.8.167:/WebGoat
-                            """
-                            
-                            sh """
-                                ssh -o StrictHostKeyChecking=no ubuntu@172.31.8.167 \
-                                "nohup java -jar /WebGoat/webgoat-server-v8.2.0-SNAPSHOT.jar --server.address=0.0.0.0 > logfile.log 2>&1 & disown"
-                            """
-                        }
+                        sh """
+                            ssh -o StrictHostKeyChecking=no ubuntu@172.31.8.167 \
+                            "nohup java -jar /WebGoat/webgoat-server-v8.2.0-SNAPSHOT.jar --server.address=0.0.0.0 > logfile.log 2>&1 & disown"
+                        """
                     }
                 }
             }
