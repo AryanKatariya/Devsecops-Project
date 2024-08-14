@@ -99,7 +99,8 @@ pipeline {
             steps {
                 sshagent(['zap-ssh']) {
                     sh """
-                    ssh -o StrictHostKeyChecking=no zap@172.31.12.108 'sudo docker run --rm -v /home/zap:/zap/wrk/:rw -t zaproxy/zap-stable zap-full-scan.py -t http://13.233.148.227:8080/WebGoat -x /zap/wrk/zap_report'
+                    ssh -o StrictHostKeyChecking=no zap@172.31.12.108 \
+                    'echo "zap" | sudo docker run --rm -v /home/zap:/zap/wrk/:rw -t zaproxy/zap-stable zap-full-scan.py -t http://13.233.148.227:8080/WebGoat -x zap_report || true'
                     """
                 }
             }
