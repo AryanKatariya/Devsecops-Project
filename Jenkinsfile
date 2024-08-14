@@ -85,7 +85,7 @@ pipeline {
                         
                         sh """
                             ssh -o StrictHostKeyChecking=no ubuntu@172.31.8.167 \
-                            "nohup java -jar /WebGoat/webgoat-server-v8.2.0-SNAPSHOT.jar &"
+                            "nohup java -jar /WebGoat/webgoat-server-v8.2.0-SNAPSHOT.jar --server.address=0.0.0.0 > logfile.log 2>&1"
                         """
                     }
                 }
