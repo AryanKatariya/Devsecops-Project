@@ -67,7 +67,6 @@ pipeline {
 
                     sh """
                             sshpass -p 'docker' ssh -o StrictHostKeyChecking=no dockeradmin@172.31.44.98 \
-                            // "sudo /usr/sbin/fuser -k 8080/tcp || true && nohup java -jar webgoat-server-v8.2.0-SNAPSHOT.jar --server.address=0.0.0.0 > /dev/null 2>&1 &"
                             "nohup java -jar webgoat-server-v8.2.0-SNAPSHOT.jar --server.address=0.0.0.0 &"
                         """
                 }
@@ -86,3 +85,4 @@ pipeline {
 
     }    
 }
+// "sudo /usr/sbin/fuser -k 8080/tcp || true && nohup java -jar webgoat-server-v8.2.0-SNAPSHOT.jar --server.address=0.0.0.0 > /dev/null 2>&1 &"
