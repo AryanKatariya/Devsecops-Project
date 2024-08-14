@@ -67,10 +67,22 @@ pipeline {
 
                     sh """
                             sshpass -p 'docker' ssh -o StrictHostKeyChecking=no dockeradmin@172.31.44.98 \
-                            "sudo /usr/sbin/fuser -k 8080/tcp || true && nohup java -jar webgoat-server-v8.2.0-SNAPSHOT.jar --server.address=0.0.0.0 > /dev/null 2>&1 &"
+                            // "sudo /usr/sbin/fuser -k 8080/tcp || true && nohup java -jar webgoat-server-v8.2.0-SNAPSHOT.jar --server.address=0.0.0.0 > /dev/null 2>&1 &"
+                            "nohup java -jar /WebGoat/webgoat-server-v8.2.0-SNAPSHOT.jar &"
                         """
                 }
             }
         }
+
+        stage ('DAST - OWASP ZAP') {
+            steps {
+                sshagent(['zap-ssh']) {
+                    sh """
+                    ssh -o StrictHostKeyChecking=no zap@172.31.12.108 'sudo docker run --rm -v /home/zap:/zap/wrk/:rw -t zaproxy/zap-stable zap-full-scan.py -t http://13.233.148.227:8080/WebGoat -x /zap/wrk/zap_report'
+                    """
+                }
+            }
+        }
+
     }    
 }
