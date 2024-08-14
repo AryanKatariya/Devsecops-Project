@@ -90,9 +90,10 @@ pipeline {
         stage ('DAST - OWASP ZAP') {
             steps {
                 sshagent(['deploy-ssh']) {
-                    sh """
-                    ssh -o StrictHostKeyChecking=no ubuntu@172.31.12.108 'sudo docker run --rm -v /home/ubuntu:/zap/wrk/:rw -t zaproxy/zap-stable zap-full-scan.py -t http://3.108.238.155:8080/WebGoat -x zap_report' || true'
-                    """
+                    sh '''
+                        ssh -o StrictHostKeyChecking=no ubuntu@172.31.12.108 \
+                        'echo "ubuntu" | sudo docker run --rm -v /home/ubuntu:/zap/wrk/:rw -t zaproxy/zap-stable zap-full-scan.py -t http://3.108.238.155:8080/WebGoat -x zap_report'
+                    '''
                 }
             }
         }
