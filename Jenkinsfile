@@ -41,7 +41,7 @@ pipeline {
             }
         }
 
-       stage ('SAST - SonarQube') {
+        stage ('SAST - SonarQube') {
             steps {
                 withSonarQubeEnv('sonar') {
                 sh 'mvn clean sonar:sonar -Dsonar.java.binaries=src'
@@ -66,7 +66,9 @@ pipeline {
                     sh "sshpass -p ${password} scp -o StrictHostKeyChecking=no ${warFile} ${username}@172.31.44.98:/home/dockeradmin"
 
                     sh """
-                            sshpass -p 'docker' ssh -o StrictHostKeyChecking=no dockeradmin@172.31.44.98 'nohup java -jar webgoat-server-v8.2.0-SNAPSHOT.jar & --server.address=0.0.0.0 &'
+                            sshpass -p 'docker' ssh -o StrictHostKeyChecking=no dockeradmin@172.31.44.98 \
+                            "if ! fuser 8080/tcp; then nohup java -jar webgoat-server-v8.2.0-SNAPSHOT.jar --server.address=0.0.0.0 & fi"
+
                         """
                 }
             }
