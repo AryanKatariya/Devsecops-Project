@@ -44,9 +44,9 @@ pipeline {
         stage('Start-SonarQube') {
             steps {
                 script {
-                    sh 'docker stop sonar || true'
-                    sh 'docker rm sonar || true'
-                    sh 'docker run -d --name sonar -p 9000:9000 -v sonarqube_data:/opt/sonarqube/data sonarqube:lts-community'
+                    sh 'sudo docker stop sonar || true'
+                    sh 'sudo docker rm sonar || true'
+                    sh 'sudo docker run -d --name sonar -p 9000:9000 -v sonarqube_data:/opt/sonarqube/data sonarqube:lts-community'
                 }
             }
         }
