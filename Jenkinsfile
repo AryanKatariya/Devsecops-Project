@@ -75,18 +75,20 @@ pipeline {
 
         stage('Deploy to server') {
             steps {
-                script {
-                    def warFile = '/var/lib/jenkins/workspace/GoatPipeline@2/webgoat-server/target/webgoat-server-v8.2.0-SNAPSHOT.jar'
-                    
-                    sshagent(['deploy-ssh']) {
-                        sh """
-                            scp -o StrictHostKeyChecking=no ${warFile} ubuntu@172.31.8.167:/WebGoat
-                        """
+                timeout(time: 3, unit: 'MINUTES'){
+                    script {
+                        def warFile = '/var/lib/jenkins/workspace/GoatPipeline@2/webgoat-server/target/webgoat-server-v8.2.0-SNAPSHOT.jar'
                         
-                        sh """
-                            ssh -o StrictHostKeyChecking=no ubuntu@172.31.8.167 \
-                            "nohup java -jar /WebGoat/webgoat-server-v8.2.0-SNAPSHOT.jar --server.address=0.0.0.0 > logfile.log 2>&1 & disown"
-                        """
+                        sshagent(['deploy-ssh']) {
+                            sh """
+                                scp -o StrictHostKeyChecking=no ${warFile} ubuntu@172.31.8.167:/WebGoat
+                            """
+                            
+                            sh """
+                                ssh -o StrictHostKeyChecking=no ubuntu@172.31.8.167 \
+                                "nohup java -jar /WebGoat/webgoat-server-v8.2.0-SNAPSHOT.jar --server.address=0.0.0.0 > logfile.log 2>&1 & disown"
+                            """
+                        }
                     }
                 }
             }
@@ -98,7 +100,7 @@ pipeline {
                 sshagent(['zap-ssh']) {
                     sh """
                     ssh -o StrictHostKeyChecking=no zap@172.31.12.108 \
-                    'echo "zap" | sudo docker run --rm -v /home/zap:/zap/wrk/:rw -t zaproxy/zap-stable zap-full-scan.py -t http://3.108.238.155/:8080/WebGoat -x zap_report || true'
+                    'echo "zap" | sudo docker run --rm -v /home/zap:/zap/wrk/:rw -t zaproxy/zap-stable zap-full-scan.py -t http://3.108.238.155:8080/WebGoat -x zap_report || true'
                     """
                 }
             }
