@@ -41,6 +41,16 @@ pipeline {
             }
         }
 
+        stage('Start-SonarQube') {
+            steps {
+                script {
+                    sh 'docker stop sonar || true'
+                    sh 'docker rm sonar || true'
+                    sh 'docker run -d --name sonar -p 9000:9000 -v sonarqube_data:/opt/sonarqube/data sonarqube:lts-community'
+                }
+            }
+        }
+
         stage ('SAST - SonarQube') {
             steps {
                 withSonarQubeEnv('sonar') {
@@ -54,24 +64,6 @@ pipeline {
                 sh "mvn clean install -DskipTests"
             }
         }
-
-//        stage('Deploy to server') {
-//            steps {
-//                script {
-//                    def username = 'dockeradmin'
-//                    def password = 'docker'
-//                    def CONTAINER_NAME = 'devops-container'
-//                    
-//                    def warFile = '/var/lib/jenkins/workspace/GoatPipeline@2/webgoat-server/target/webgoat-server-v8.2.0-SNAPSHOT.jar'
-//                    sh "sshpass -p ${password} scp -o StrictHostKeyChecking=no ${warFile} ${username}@172.31.44.98:/home/dockeradmin"
-
-//                    sh """
-//                            sshpass -p 'docker' ssh -o StrictHostKeyChecking=no dockeradmin@172.31.44.98 \
-//                            "nohup java -jar webgoat-server-v8.2.0-SNAPSHOT.jar --server.address=0.0.0.0 &"
-//                        """
-//                }
-//            }
-//        }
 
         stage('Deploy to server') {
             steps {
@@ -105,8 +97,5 @@ pipeline {
                 }
             }
         }
-
     }    
 }
-
-// "sudo /usr/sbin/fuser -k 8080/tcp || true && nohup java -jar webgoat-server-v8.2.0-SNAPSHOT.jar --server.address=0.0.0.0 > /dev/null 2>&1 &"
