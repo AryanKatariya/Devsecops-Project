@@ -108,18 +108,18 @@ pipeline {
             steps {
                 sshagent(['deploy-ssh']) {
                     sh '''
-                        sleep 60
+                        sleep 30
                         
                         ssh -o StrictHostKeyChecking=no ubuntu@172.31.12.108 \
                         'echo "ubuntu" | sudo docker run --rm -v /home/ubuntu:/zap/wrk/:rw -t zaproxy/zap-stable zap-full-scan.py -t http://13.200.243.90:8080/WebGoat -x zap_report.yml' || true 
                     
                         ssh -o StrictHostKeyChecking=no ubuntu@172.31.12.108 \
-                        'curl -X POST "http://15.206.72.41:8080/api/v2/import-scan/" \
-                        -H "Authorization: Token ${API_KEY}" \
-                        -F "scan_type=ZAP Scan" \
-                        -F "file=@/home/ubuntu/zap_report.yml" \
-                        -F "engagement=3" \
-                        -F "version=1.0"'
+                        "curl -X POST 'http://15.206.72.41:8080/api/v2/import-scan/' \
+                        -H 'Authorization: Token ${API_KEY}' \
+                        -F 'scan_type=ZAP Scan' \
+                        -F 'file=@/home/ubuntu/zap_report.yml' \
+                        -F 'engagement=3' \
+                        -F 'version=1.0'"
                     '''
                 }
             }
