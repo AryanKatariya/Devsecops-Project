@@ -97,7 +97,7 @@ pipeline {
                             
                             sh """
                                 ssh -o StrictHostKeyChecking=no ubuntu@172.31.8.167 \
-                                "sudo fuser -k 8080/tcp && nohup java -jar /WebGoat/webgoat-server-v8.2.0-SNAPSHOT.jar --server.address=0.0.0.0 > logfile.log 2>&1 & disown"
+                                "nohup java -jar /WebGoat/webgoat-server-v8.2.0-SNAPSHOT.jar --server.address=0.0.0.0 > logfile.log 2>&1 & disown"
                             """
                         }
                     }
@@ -109,10 +109,21 @@ pipeline {
         stage ('DAST - OWASP ZAP') {
             steps {
                 sshagent(['deploy-ssh']) {
+                    
                     sh '''
                         ssh -o StrictHostKeyChecking=no ubuntu@172.31.12.108 \
-                        'echo "ubuntu" | sudo docker run --rm -v /home/ubuntu:/zap/wrk/:rw -t zaproxy/zap-stable zap-full-scan.py -t http://13.200.243.90:8080/WebGoat -x zap_report' || true 
+                        'echo "ubuntu" | sudo docker run --rm -v /home/ubuntu:/zap/wrk/:rw -t zaproxy/zap-stable zap-full-scan.py -t http://13.200.243.90:8080/WebGoat -x zap_report.yml' || true 
+                    
+                        ssh -o StrictHostKeyChecking=no ubuntu@172.31.12.108 \
+                        'curl -X POST "http://15.206.72.41:8080/api/v2/import-scan/" \
+                        -H "Authorization: Token ${DEFECTDOJO_API_KEY}" \
+                        -F "scan_type=ZAP Scan" \
+                        -F "file=@/home/ubuntu/zap_report.yml" \
+                        -F "engagement=3" \
+                        -F "version=1.0"'
                     '''
+
+
                 }
             }
         }
