@@ -115,7 +115,7 @@ pipeline {
                     
                         ssh -o StrictHostKeyChecking=no ubuntu@172.31.12.108 \
                         'curl -X POST "http://15.206.72.41:8080/api/v2/import-scan/" \
-                        -H "Authorization: Token ${DEFECTDOJO_API_KEY}" \
+                        -H "Authorization: Token ${API_KEY}" \
                         -F "scan_type=ZAP Scan" \
                         -F "file=@/home/ubuntu/zap_report.yml" \
                         -F "engagement=3" \
