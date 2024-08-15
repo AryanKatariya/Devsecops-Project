@@ -9,6 +9,7 @@ pipeline {
     environment {
         GITHUB_TOKEN = credentials('github_token')
         API_KEY = credentials('dojo-api')
+        DOJO_IP = "15.206.72.41"
     }
 
     stages {
@@ -28,7 +29,7 @@ pipeline {
             steps {
                 sh 'trufflehog https://$GITHUB_TOKEN@github.com/AryanKatariya/Devsecops-Project.git --json > trufflehog_output.json || true'
                 sh '''
-                    curl -X POST "http://15.206.72.41:8080/api/v2/import-scan/" \
+                    curl -X POST "http://${DOJO_IP}:8080/api/v2/import-scan/" \
                         -H "Authorization: Token ${API_KEY}" \
                         -F "file=@trufflehog_output.json" \
                         -F "scan_type=Trufflehog Scan" \
@@ -49,7 +50,7 @@ pipeline {
                 dependencyCheckPublisher pattern: 'dependency-check-report.xml'
 
                 sh '''
-                    curl -X POST "http://15.206.72.41:8080/api/v2/import-scan/" \
+                    curl -X POST "http://${DOJO_IP}:8080/api/v2/import-scan/" \
                     -H "Authorization: Token ${API_KEY}" \
                     -F "file=@dependency-check-report.xml" \
                     -F "scan_type=Dependency Check Scan" \
@@ -114,7 +115,7 @@ pipeline {
                         'echo "ubuntu" | sudo docker run --rm -v /home/ubuntu:/zap/wrk/:rw -t zaproxy/zap-stable zap-full-scan.py -t http://13.200.243.90:8080/WebGoat -x zap_report.yml' || true 
                     
                         ssh -o StrictHostKeyChecking=no ubuntu@172.31.12.108 \
-                        "curl -X POST 'http://15.206.72.41:8080/api/v2/import-scan/' \
+                        "curl -X POST 'http://${DOJO_IP}/api/v2/import-scan/' \
                         -H 'Authorization: Token ${API_KEY}' \
                         -F 'scan_type=ZAP Scan' \
                         -F 'file=@/home/ubuntu/zap_report.yml' \
