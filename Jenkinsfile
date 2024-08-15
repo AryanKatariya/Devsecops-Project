@@ -31,7 +31,7 @@ pipeline {
                     curl -X POST "http://15.206.72.41:8080/api/v2/import-scan/" \
                         -H "Authorization: Token ${API_KEY}" \
                         -F "file=@trufflehog_output.json" \
-                        -F "scan_type=TruffleHog Scan" \
+                        -F "scan_type=Trufflehog Scan" \
                         -F "engagement=2" \
                         -F "version=1.0"
                     '''
