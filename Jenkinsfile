@@ -9,7 +9,7 @@ pipeline {
     environment {
         GITHUB_TOKEN = credentials('github_token')
         API_KEY = credentials('dojo-api')
-        DOJO_IP = "65.1.84.127"
+        DOJO_IP = "65.0.29.174"
     }
 
     stages {
@@ -112,7 +112,7 @@ pipeline {
                         sleep 30
                         
                         ssh -o StrictHostKeyChecking=no ubuntu@172.31.12.108 \
-                        'echo "ubuntu" | sudo docker run --rm -v /home/ubuntu:/zap/wrk/:rw -t zaproxy/zap-stable zap-full-scan.py -t http://13.201.78.98:8080/WebGoat -x zap_report.yml' || true 
+                        'echo "ubuntu" | sudo docker run --rm -v /home/ubuntu:/zap/wrk/:rw -t zaproxy/zap-stable zap-full-scan.py -t http://3.109.54.129:8080/WebGoat -x zap_report.yml' || true 
                     
                         ssh -o StrictHostKeyChecking=no ubuntu@172.31.12.108 \
                         "curl -X POST 'http://${DOJO_IP}:8080/api/v2/import-scan/' \
