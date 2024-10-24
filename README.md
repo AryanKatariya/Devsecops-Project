@@ -95,7 +95,7 @@ To use this pipeline:
 1. Push your code to the GitHub repository.
 2. The Jenkins pipeline will be automatically triggered, running through all the security checks and deploying the application.
 
-You can also manually trigger the Jenkins pipeline if required.
+You can also manually trigger the Jenkins pipeline if you need to.
 
 ## ⚙️ Configuration
 
@@ -107,6 +107,9 @@ You can also manually trigger the Jenkins pipeline if required.
 - Adjust `sonar-project.properties` for custom SonarQube settings.
 
 ## 🤝 Contributors
-| ![Aryan](https://github.com/AryanKatariya.png?size=50) | ![Chaitanya](https://github.com/chaitanyaodd1.png?size=50) | ![Gaurav](https://github.com/greninja05.png?size=50) | ![Ayush](https://github.com/ayushpujara.png?size=0) |
-| :----------------------------------------------------: | :--------------------------------------------------------: | :--------------------------------------------------: | --------------------------------------------------- |
-|                   **Aryan Katariya**                   |                   **Chaitanya Dankhade**                   |                  **Gaurav Meshram**                  | **Ayush Pujara**                                    |
+
+| [![Aryan Katariya](https://github.com/AryanKatariya.png?size=100)](https://github.com/AryanKatariya)  <br> [Aryan Katariya](https://github.com/AryanKatariya) | [![Chaitanya Dankhade](https://github.com/chaitanyaodd1.png?size=100)](https://github.com/chaitanyaodd1)  <br> [Chaitanya Dankhade](https://github.com/chaitanyaodd1) | [![Gaurav Meshram](https://github.com/greninja05.png?size=100)](https://github.com/greninja05)  <br> [Gaurav Meshram](https://github.com/greninja05) | [![Ayush Pujara](https://github.com/ayushpujara.png?size=100)](https://github.com/ayushpujara)  <br> [Ayush Pujara](https://github.com/ayushpujara) |
+|-------------|-------------|-------------|-------------|
+
+
+
